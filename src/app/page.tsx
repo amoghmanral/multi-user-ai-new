@@ -38,7 +38,7 @@ export default function Home() {
               Collaborative conversations with friends, teams, and an AI facilitator that only joins when it should.
             </p>
             <div className="space-y-4">
-              <Link href="/multi-user-chat">
+              <Link href="/user-setup">
                 <button className="bg-[#A8C3A0] hover:bg-[#9BB396] text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                   Enter Chat
                 </button>
@@ -162,7 +162,7 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-[#2D2D2D] mb-8">
             Start a conversation today.
           </h2>
-          <Link href="/multi-user-chat">
+          <Link href="/user-setup">
             <button className="bg-[#A8C3A0] hover:bg-[#9BB396] text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
               Get Started
             </button>
