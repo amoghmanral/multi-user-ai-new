@@ -4,6 +4,7 @@ import React from 'react';
 import RadialMenuSpell from '@/cedar/components/spells/RadialMenuSpell';
 import TooltipMenuSpell from '@/cedar/components/spells/TooltipMenuSpell';
 import { useMultiUserChat } from '../MultiUserChatProvider';
+import { ActivationMode } from 'cedar-os';
 import { 
   Upload, 
   Users, 
@@ -21,9 +22,9 @@ import {
 export const MultiUserChatSpells: React.FC = () => {
   const {
     currentRoom,
-    roomUsers,
+    members: roomUsers,
     isVoiceEnabled,
-    toggleVoice,
+    setVoiceEnabled: toggleVoice,
     uploadFile,
     sendMessage,
     createRoom,
@@ -87,7 +88,7 @@ export const MultiUserChatSpells: React.FC = () => {
       title: isVoiceEnabled ? 'Disable Voice' : 'Enable Voice',
       icon: isVoiceEnabled ? MicOff : Mic,
       onInvoke: () => {
-        toggleVoice();
+        toggleVoice(!isVoiceEnabled);
       }
     },
     {
@@ -98,6 +99,12 @@ export const MultiUserChatSpells: React.FC = () => {
       }
     }
   ];
+
+  console.log('🔮 MultiUserChatSpells: Rendering spells with items:', quickActionsItems.length);
+  console.log('🔮 MultiUserChatSpells: Activation conditions:', {
+    events: ['ctrl+k', 'cmd+k'],
+    mode: 'toggle'
+  });
 
   // Text Selection Actions
   const selectionActions = [
@@ -142,9 +149,8 @@ export const MultiUserChatSpells: React.FC = () => {
         spellId="multi-user-quick-actions"
         items={quickActionsItems}
         activationConditions={{
-          events: ['k'],
-          modifiers: ['Control'],
-          mode: 'toggle'
+          events: ['ctrl+k', 'cmd+k'],
+          mode: ActivationMode.TOGGLE
         }}
       />
 
@@ -153,6 +159,23 @@ export const MultiUserChatSpells: React.FC = () => {
         spellId="multi-user-selection-actions"
         items={selectionActions}
         stream={true}
+      />
+      
+      {/* Test spell with simple key */}
+      <RadialMenuSpell
+        spellId="test-spell"
+        items={[{
+          title: 'Test Action',
+          icon: '🧪',
+          onInvoke: () => {
+            console.log('🧪 Test spell activated!');
+            alert('Test spell works!');
+          }
+        }]}
+        activationConditions={{
+          events: ['t'],
+          mode: ActivationMode.TOGGLE
+        }}
       />
     </>
   );

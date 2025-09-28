@@ -41,6 +41,18 @@ const RadialMenuSpell: React.FC<RadialMenuSpellProps> = ({
 	items,
 	activationConditions,
 }) => {
+	console.log('🔮 RadialMenuSpell: Component mounted', {
+		spellId,
+		items: items.length,
+		activationConditions
+	});
+	
+	// Log when the spell hook is called
+	console.log('🔮 RadialMenuSpell: useSpell called with:', {
+		id: spellId,
+		activationConditions,
+		itemsCount: items.length
+	});
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { styling } = useStyling();
 	const highlightColor = styling.color || '#3b82f6';
@@ -67,6 +79,13 @@ const RadialMenuSpell: React.FC<RadialMenuSpellProps> = ({
 		id: spellId,
 		activationConditions,
 		onActivate: (state) => {
+			console.log('🎯 RadialMenuSpell activated!', {
+				spellId,
+				activationConditions,
+				triggerData: state.triggerData,
+				state
+			});
+			
 			// If it's a mouse event, capture the position
 			if (state.triggerData?.mousePosition) {
 				setMenuPosition(state.triggerData.mousePosition);
