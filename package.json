@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e .env -- concurrently -n \"NEXT,MASTRA\" -c \"blue.bold,magenta.bold\" \"npm run dev:next\" \"npm run dev:mastra\"",
+    "dev": "concurrently -n \"NEXT,MASTRA\" -c \"blue.bold,magenta.bold\" \"dotenv -f .env -- npm run dev:next\" \"dotenv -f .env -- npm run dev:mastra\"",
     "dev:next": "next dev --turbopack",
     "dev:mastra": "npm --prefix src/backend run dev",
     "build": "next build",

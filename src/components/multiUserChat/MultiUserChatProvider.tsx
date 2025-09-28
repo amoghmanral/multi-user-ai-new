@@ -219,6 +219,7 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
       setAiTyping(data.isTyping);
     });
 
+
     newSocket.on('file-uploaded', (data: { filename: string; userId: string }) => {
       console.log('📁 File uploaded:', data);
     });

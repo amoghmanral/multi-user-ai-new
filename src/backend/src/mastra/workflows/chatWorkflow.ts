@@ -69,15 +69,8 @@ const callAgent = createStep({
         roomContext = await ContextService.buildRoomContext(roomId);
         enhancedSystemPrompt = ContextService.buildSystemPrompt(roomContext, userId);
         
-        // Check if this is an AI mention and should trigger a response
-        const isAIMention = ContextService.isAIMention(prompt);
-        if (!isAIMention && messageType !== 'ai') {
-          // If it's not an AI mention, don't respond unless specifically requested
-          return {
-            content: '',
-            usage: null,
-          };
-        }
+        // Note: Selective reply logic is now handled entirely by the AI agent
+        // The agent returns JSON with should_reply field to determine if it should respond
       } catch (error) {
         console.error('Error building room context:', error);
       }

@@ -257,14 +257,17 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
         {/* AI Typing Indicator */}
         {aiTyping && (
           <div className="flex items-start space-x-3">
-            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-              <Bot className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+              <Bot className="w-4 h-4 text-blue-600" />
             </div>
-            <div className="bg-gray-100 rounded-lg px-4 py-2">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            <div className="bg-blue-100 rounded-lg px-4 py-2">
+              <div className="flex items-center space-x-2">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+                <span className="text-sm text-blue-600">AI is typing...</span>
               </div>
             </div>
           </div>
