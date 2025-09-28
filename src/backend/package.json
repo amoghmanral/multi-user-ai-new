@@ -1,0 +1,38 @@
+{
+  "name": "examples-backend-mastra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "mastra dev",
+    "dev:server": "tsx src/customServer.ts",
+    "build": "mastra build",
+    "start": "mastra start"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.32",
+    "@cedar-os/backend": "^0.0.12",
+    "@mastra/core": "^0.18.0",
+    "@mastra/libsql": "^0.14.3",
+    "@mastra/loggers": "^0.10.13",
+    "@mastra/memory": "^0.15.3",
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "socket.io": "^4.8.1",
+    "sqlite3": "^5.1.7",
+    "tsx": "^4.20.6",
+    "uuid": "^13.0.0",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "mastra": "^0.13.1",
+    "typescript": "^5.8.3"
+  }
+}
