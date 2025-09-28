@@ -164,7 +164,7 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
     localStorage.setItem('multiUserChat_members', JSON.stringify(members));
   }, [members]);
 
-  // Initialize socket connection
+  // Initialize socket connection (only once)
   useEffect(() => {
     const newSocket = io('http://128.61.119.144:4111', {
       transports: ['websocket'],
@@ -174,15 +174,6 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
       console.log('✅ Connected to server');
       setSocket(newSocket);
       setIsConnected(true);
-      
-      // Join the room if we have a current room and user
-      if (currentRoom && currentUser) {
-        console.log('Joining room:', currentRoom.id, 'as user:', currentUser.id);
-        newSocket.emit('join-room', {
-          roomId: currentRoom.id,
-          userId: currentUser.id
-        });
-      }
     });
 
     newSocket.on('disconnect', () => {
@@ -203,7 +194,15 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
 
     newSocket.on('user-joined', (data: { userId: string; user: User }) => {
       console.log('👤 User joined:', data);
-      setMembers(prev => [...prev, data.user]);
+      setMembers(prev => {
+        // Check if user already exists to prevent duplicates
+        const exists = prev.some(member => member.id === data.user.id);
+        if (exists) {
+          console.log('User already exists, not adding duplicate:', data.user.name);
+          return prev;
+        }
+        return [...prev, data.user];
+      });
     });
 
     newSocket.on('user-left', (data: { userId: string }) => {
@@ -224,6 +223,11 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
       console.log('📁 File uploaded:', data);
     });
 
+    newSocket.on('recent-messages', (messages: Message[]) => {
+      console.log('📜 Received recent messages:', messages.length);
+      setMessages(messages);
+    });
+
     newSocket.on('error', (error) => {
       console.error('Socket error:', error);
     });
@@ -233,21 +237,31 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, []); // Remove dependencies to prevent socket recreation
+
+  // Track if we've already joined the current room to prevent duplicate joins
+  const [hasJoinedRoom, setHasJoinedRoom] = useState(false);
 
   // Join room when current room or user changes
   useEffect(() => {
-    if (socket && currentRoom && currentUser && isConnected) {
+    if (socket && currentRoom && currentUser && isConnected && !hasJoinedRoom) {
       console.log('🔄 Joining room:', currentRoom.id, 'as user:', currentUser.id);
       socket.emit('join-room', {
         roomId: currentRoom.id,
         userId: currentUser.id
       });
       
+      setHasJoinedRoom(true);
+      
       // Load recent messages from database
       loadRecentMessages(currentRoom.id);
     }
-  }, [socket, currentRoom, currentUser, isConnected]);
+  }, [socket, currentRoom, currentUser, isConnected, hasJoinedRoom]);
+
+  // Reset hasJoinedRoom when room or user changes
+  useEffect(() => {
+    setHasJoinedRoom(false);
+  }, [currentRoom, currentUser]);
 
   // Function to load recent messages
   const loadRecentMessages = async (roomId: string) => {
@@ -364,6 +378,8 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
       localStorage.removeItem(`multiUserChat_messages_${currentRoom.id}`);
     }
     localStorage.removeItem('multiUserChat_members');
+    
+    console.log('Left room and cleared data');
   };
 
   const addMessage = (message: Omit<Message, 'id'>) => {

@@ -43,6 +43,9 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
     clearAllData
   } = useMultiUserChat();
 
+  // Don't auto-enter chat - let user choose what to do
+  // This allows users to see their current room and choose to continue or start fresh
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -111,7 +114,9 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
               <div>
                 <h1 className="text-xl font-semibold text-gray-900">{currentRoom?.name}</h1>
                 <p className="text-sm text-gray-500">
-                  {isConnected ? 'Connected' : 'Disconnected'} • {members?.length || 0} members
+                  {isConnected ? 'Connected' : 'Disconnected'} • {members?.filter((user, index, self) => 
+                    index === self.findIndex(u => u.id === user.id)
+                  ).length || 0} members
                 </p>
               </div>
             </div>
@@ -125,7 +130,10 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
             <div className="flex items-center space-x-2">
               <Users className="w-5 h-5 text-gray-500" />
               <div className="flex -space-x-2">
-                {members?.slice(0, 3).map((user) => (
+                {members?.filter((user, index, self) => 
+                  // Remove duplicates by checking if this is the first occurrence of this user ID
+                  index === self.findIndex(u => u.id === user.id)
+                ).slice(0, 3).map((user) => (
                   <div
                     key={user.id}
                     className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold"
@@ -135,9 +143,13 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                 ))}
-                {members && members.length > 3 && (
+                {members && members.filter((user, index, self) => 
+                  index === self.findIndex(u => u.id === user.id)
+                ).length > 3 && (
                   <div className="w-8 h-8 rounded-full border-2 border-white bg-gray-400 flex items-center justify-center text-white text-xs font-bold">
-                    +{members.length - 3}
+                    +{members.filter((user, index, self) => 
+                      index === self.findIndex(u => u.id === user.id)
+                    ).length - 3}
                   </div>
                 )}
               </div>
@@ -152,23 +164,23 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
               <HelpCircle className="w-5 h-5" />
             </button>
 
+            {/* Add Others / Room Settings */}
+            <button
+              onClick={() => setShowRoomManager(true)}
+              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Add others / Room settings"
+            >
+              <Users className="w-5 h-5" />
+            </button>
+
             {/* Leave Room */}
             <button
               onClick={() => {
                 leaveRoom();
-                window.location.reload();
+                setShowRoomManager(true); // Return to room manager instead of reloading
               }}
               className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg transition-colors"
               title="Leave Room"
-            >
-              <Settings className="w-5 h-5" />
-            </button>
-
-            {/* Settings */}
-            <button
-              onClick={() => setShowRoomManager(true)}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Room settings"
             >
               <Settings className="w-5 h-5" />
             </button>
@@ -231,9 +243,9 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
                     : 'bg-white border border-gray-200 text-gray-900'
                 }`}>
                   <p className="text-sm">{message.content}</p>
-                  {message.metadata?.filename && (
+                  {message.metadata && message.type === 'file' && (
                     <p className="text-xs mt-1 opacity-75">
-                      📁 {message.metadata.filename}
+                      📁 {message.metadata}
                     </p>
                   )}
                 </div>

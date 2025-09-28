@@ -42,8 +42,8 @@ Instructions:
 - Reference other users when relevant
 - Maintain conversation continuity`;
 
-    // Use the agent's generate method with memory
-    const response = await starterAgent.generate([
+    // Use the agent's generateVNext method with memory (required for all OpenAI models)
+    const response = await starterAgent.generateVNext([
       { role: 'user', content: enhancedPrompt }
     ], {
       memory: {
@@ -52,7 +52,9 @@ Instructions:
       }
     });
     
-    return response.text || 'I understand your message and I\'m here to help!';
+    // generateVNext returns a different structure - we need to get the result
+    const result = await response.result;
+    return result.text || 'I understand your message and I\'m here to help!';
   } catch (error) {
     console.error('Error calling Mastra AI:', error);
     

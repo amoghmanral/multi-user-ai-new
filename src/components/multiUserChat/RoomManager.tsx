@@ -42,52 +42,89 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
 
   const copyInviteCode = async () => {
     if (currentRoom?.inviteCode) {
-      await navigator.clipboard.writeText(currentRoom.inviteCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      try {
+        // Try modern clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(currentRoom.inviteCode);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        } else {
+          // Fallback for older browsers or non-HTTPS
+          const textArea = document.createElement('textarea');
+          textArea.value = currentRoom.inviteCode;
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          } catch (err) {
+            console.error('Failed to copy:', err);
+            // Show the code in an alert as last resort
+            alert(`Invite Code: ${currentRoom.inviteCode}`);
+          }
+          document.body.removeChild(textArea);
+        }
+      } catch (error) {
+        console.error('Failed to copy invite code:', error);
+        // Show the code in an alert as fallback
+        alert(`Invite Code: ${currentRoom.inviteCode}`);
+      }
     }
   };
 
   if (currentRoom) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Hash className="w-5 h-5 text-blue-600" />
-            </div>
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Hash className="w-8 h-8 text-blue-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
+          <p className="text-gray-600">You're currently in a chat room</p>
+        </div>
+
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <div className="flex items-center justify-between mb-2">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{currentRoom.name}</h2>
+              <h3 className="font-semibold text-gray-900">{currentRoom.name}</h3>
               <p className="text-sm text-gray-500">Room ID: {currentRoom.inviteCode}</p>
             </div>
+            <button
+              onClick={copyInviteCode}
+              className="flex items-center space-x-2 px-3 py-2 text-sm bg-white hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4 text-green-600" />
+                  <span className="text-green-600">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copy Invite</span>
+                </>
+              )}
+            </button>
           </div>
-          <button
-            onClick={copyInviteCode}
-            className="flex items-center space-x-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4 text-green-600" />
-                <span className="text-green-600">Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                <span>Copy Invite</span>
-              </>
-            )}
-          </button>
         </div>
 
         <div className="flex items-center space-x-2 mb-4">
           <Users className="w-5 h-5 text-gray-500" />
           <span className="text-sm font-medium text-gray-700">
-            {members?.length || 0} member{(members?.length || 0) !== 1 ? 's' : ''}
+            {members?.filter((user, index, self) => 
+              index === self.findIndex(u => u.id === user.id)
+            ).length || 0} member{(members?.filter((user, index, self) => 
+              index === self.findIndex(u => u.id === user.id)
+            ).length || 0) !== 1 ? 's' : ''}
           </span>
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
-          {members?.map((user) => (
+          {members?.filter((user, index, self) => 
+            index === self.findIndex(u => u.id === user.id)
+          ).map((user) => (
             <div
               key={user.id}
               className="flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-lg"
@@ -103,16 +140,37 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
           ))}
         </div>
 
-        {/* Start Fresh Button */}
-        <button
-          onClick={() => {
-            clearAllData();
-            window.location.reload();
-          }}
-          className="w-full px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm font-medium"
-        >
-          🗑️ Start Fresh (Clear All Data)
-        </button>
+        {/* Action Buttons */}
+        <div className="space-y-3">
+          <button
+            onClick={onRoomJoin}
+            className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            💬 Continue Chat
+          </button>
+
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => {
+                clearAllData();
+                window.location.reload();
+              }}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+            >
+              🗑️ Leave Room
+            </button>
+            
+            <button
+              onClick={() => {
+                clearAllData();
+                window.location.reload();
+              }}
+              className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm font-medium"
+            >
+              🔄 Start Fresh
+            </button>
+          </div>
+        </div>
 
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-800">
@@ -129,11 +187,14 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="text-center mb-6">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Plus className="w-8 h-8 text-green-600" />
+        </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Join or Create a Room
+          Create or Join a Chat Room
         </h2>
         <p className="text-gray-600">
-          Start collaborating with others in real-time
+          Start a new conversation or join an existing one
         </p>
       </div>
 
