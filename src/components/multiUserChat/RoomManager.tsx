@@ -174,10 +174,10 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
 
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-800">
-            <strong>Share this code:</strong> {currentRoom.inviteCode}
+            <strong>Invite Code:</strong> {currentRoom.inviteCode}
           </p>
           <p className="text-xs text-blue-600 mt-1">
-            Others can join this room using the invite code above
+            Share this code with others to invite them to the room
           </p>
         </div>
       </div>

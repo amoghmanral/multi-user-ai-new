@@ -16,7 +16,8 @@ import {
   MessageSquare,
   Bot,
   FileText,
-  HelpCircle
+  HelpCircle,
+  LogOut
 } from 'lucide-react';
 
 interface MultiUserChatInterfaceProps {}
@@ -43,8 +44,16 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
     clearAllData
   } = useMultiUserChat();
 
-  // Don't auto-enter chat - let user choose what to do
-  // This allows users to see their current room and choose to continue or start fresh
+  // Auto-enter chat interface if we have both user and room (e.g., after refresh)
+  useEffect(() => {
+    if (currentUser && currentRoom) {
+      console.log('Auto-entering chat interface for existing room:', currentRoom.name);
+      setShowRoomManager(false);
+    } else if (currentUser && !currentRoom) {
+      console.log('User exists but no room, showing room manager');
+      setShowRoomManager(true);
+    }
+  }, [currentUser, currentRoom]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -128,7 +137,6 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
 
             {/* Room Members */}
             <div className="flex items-center space-x-2">
-              <Users className="w-5 h-5 text-gray-500" />
               <div className="flex -space-x-2">
                 {members?.filter((user, index, self) => 
                   // Remove duplicates by checking if this is the first occurrence of this user ID
@@ -155,6 +163,15 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
               </div>
             </div>
 
+            {/* Room Settings / Invite */}
+            <button
+              onClick={() => setShowRoomManager(true)}
+              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Room settings & invite others"
+            >
+              <Users className="w-5 h-5" />
+            </button>
+
             {/* Demo Instructions */}
             <button
               onClick={() => setShowDemoInstructions(true)}
@@ -162,15 +179,6 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
               title="Demo instructions"
             >
               <HelpCircle className="w-5 h-5" />
-            </button>
-
-            {/* Add Others / Room Settings */}
-            <button
-              onClick={() => setShowRoomManager(true)}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Add others / Room settings"
-            >
-              <Users className="w-5 h-5" />
             </button>
 
             {/* Leave Room */}
@@ -182,7 +190,7 @@ export const MultiUserChatInterface: React.FC<MultiUserChatInterfaceProps> = () 
               className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg transition-colors"
               title="Leave Room"
             >
-              <Settings className="w-5 h-5" />
+              <LogOut className="w-5 h-5" />
             </button>
           </div>
         </div>

@@ -82,10 +82,13 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
 
   // Load persisted state on mount
   useEffect(() => {
+    console.log('Loading persisted state from localStorage...');
     const savedUser = localStorage.getItem('multiUserChat_user');
     const savedRoom = localStorage.getItem('multiUserChat_room');
     const savedMessages = localStorage.getItem('multiUserChat_messages');
     const savedMembers = localStorage.getItem('multiUserChat_members');
+
+    console.log('Saved data found:', { savedUser: !!savedUser, savedRoom: !!savedRoom, savedMessages: !!savedMessages, savedMembers: !!savedMembers });
 
     if (savedUser) {
       try {
@@ -143,6 +146,7 @@ export const MultiUserChatProvider: React.FC<MultiUserChatProviderProps> = ({ ch
   // Save state to localStorage when it changes
   useEffect(() => {
     if (currentUser) {
+      console.log('Saving user to localStorage:', currentUser);
       localStorage.setItem('multiUserChat_user', JSON.stringify(currentUser));
     }
   }, [currentUser]);
