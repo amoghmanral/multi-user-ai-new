@@ -76,29 +76,29 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
 
   if (currentRoom) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Hash className="w-8 h-8 text-blue-600" />
+          <div className="w-16 h-16 bg-[#A8C3A0] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Hash className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
-          <p className="text-gray-600">You're currently in a chat room</p>
+          <h2 className="text-2xl font-bold text-[#2D2D2D] mb-2">Welcome Back!</h2>
+          <p className="text-[#2D2D2D]/70">You're currently in a chat room</p>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <div className="bg-[#FAF9F6] rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h3 className="font-semibold text-gray-900">{currentRoom.name}</h3>
-              <p className="text-sm text-gray-500">Room ID: {currentRoom.inviteCode}</p>
+              <h3 className="font-semibold text-[#2D2D2D]">{currentRoom.name}</h3>
+              <p className="text-sm text-[#2D2D2D]/60">Room ID: {currentRoom.inviteCode}</p>
             </div>
             <button
               onClick={copyInviteCode}
-              className="flex items-center space-x-2 px-3 py-2 text-sm bg-white hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
+              className="flex items-center space-x-2 px-3 py-2 text-sm bg-[#A8C3A0] hover:bg-[#9BB396] text-white rounded-lg transition-colors"
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 text-green-600" />
-                  <span className="text-green-600">Copied!</span>
+                  <Check className="w-4 h-4" />
+                  <span>Copied!</span>
                 </>
               ) : (
                 <>
@@ -111,8 +111,8 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
         </div>
 
         <div className="flex items-center space-x-2 mb-4">
-          <Users className="w-5 h-5 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">
+          <Users className="w-5 h-5 text-[#A8C3A0]" />
+          <span className="text-sm font-medium text-[#2D2D2D]">
             {members?.filter((user, index, self) => 
               index === self.findIndex(u => u.id === user.id)
             ).length || 0} member{(members?.filter((user, index, self) => 
@@ -127,7 +127,7 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
           ).map((user) => (
             <div
               key={user.id}
-              className="flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-lg"
+              className="flex items-center space-x-2 px-3 py-2 bg-[#FAF9F6] rounded-lg"
             >
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
@@ -135,7 +135,7 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
               >
                 {user.name.charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm text-gray-700">{user.name}</span>
+              <span className="text-sm text-[#2D2D2D]">{user.name}</span>
             </div>
           ))}
         </div>
@@ -144,7 +144,7 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
         <div className="space-y-3">
           <button
             onClick={onRoomJoin}
-            className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="w-full px-4 py-3 bg-[#A8C3A0] text-white rounded-lg hover:bg-[#9BB396] transition-colors font-medium"
           >
             💬 Continue Chat
           </button>
@@ -172,11 +172,11 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
           </div>
         </div>
 
-        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-800">
+        <div className="mt-4 p-3 bg-[#D9EAD3] rounded-lg">
+          <p className="text-sm text-[#2D2D2D]">
             <strong>Invite Code:</strong> {currentRoom.inviteCode}
           </p>
-          <p className="text-xs text-blue-600 mt-1">
+          <p className="text-xs text-[#2D2D2D]/70 mt-1">
             Share this code with others to invite them to the room
           </p>
         </div>
@@ -185,25 +185,25 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
       <div className="text-center mb-6">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Plus className="w-8 h-8 text-green-600" />
+        <div className="w-16 h-16 bg-[#A8C3A0] rounded-full flex items-center justify-center mx-auto mb-4">
+          <Plus className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl font-bold text-[#2D2D2D] mb-2">
           Create or Join a Chat Room
         </h2>
-        <p className="text-gray-600">
+        <p className="text-[#2D2D2D]/70">
           Start a new conversation or join an existing one
         </p>
       </div>
 
       <div className="space-y-6">
         {/* Create Room */}
-        <div className="border border-gray-200 rounded-lg p-4">
+        <div className="border border-gray-200 rounded-lg p-4 bg-[#FAF9F6]">
           <div className="flex items-center space-x-2 mb-3">
-            <Plus className="w-5 h-5 text-green-600" />
-            <h3 className="font-semibold text-gray-900">Create New Room</h3>
+            <Plus className="w-5 h-5 text-[#A8C3A0]" />
+            <h3 className="font-semibold text-[#2D2D2D]">Create New Room</h3>
           </div>
           <form onSubmit={handleCreateRoom}>
             <div className="flex space-x-2">
@@ -212,13 +212,13 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 placeholder="Enter room name"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A8C3A0] focus:border-transparent outline-none bg-white/50"
                 required
               />
               <button
                 type="submit"
                 disabled={!roomName.trim() || isCreating}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-[#A8C3A0] text-white rounded-lg hover:bg-[#9BB396] focus:ring-2 focus:ring-[#A8C3A0] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isCreating ? 'Creating...' : 'Create'}
               </button>
@@ -227,10 +227,10 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
         </div>
 
         {/* Join Room */}
-        <div className="border border-gray-200 rounded-lg p-4">
+        <div className="border border-gray-200 rounded-lg p-4 bg-[#FAF9F6]">
           <div className="flex items-center space-x-2 mb-3">
-            <Hash className="w-5 h-5 text-blue-600" />
-            <h3 className="font-semibold text-gray-900">Join Existing Room</h3>
+            <Hash className="w-5 h-5 text-[#A8C3A0]" />
+            <h3 className="font-semibold text-[#2D2D2D]">Join Existing Room</h3>
           </div>
           <form onSubmit={handleJoinRoom}>
             <div className="flex space-x-2">
@@ -239,13 +239,13 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                 placeholder="Enter invite code"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A8C3A0] focus:border-transparent outline-none bg-white/50"
                 required
               />
               <button
                 type="submit"
                 disabled={!inviteCode.trim() || isJoining}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-[#A8C3A0] text-white rounded-lg hover:bg-[#9BB396] focus:ring-2 focus:ring-[#A8C3A0] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isJoining ? 'Joining...' : 'Join'}
               </button>
@@ -254,9 +254,9 @@ export const RoomManager: React.FC<RoomManagerProps> = ({ onRoomJoin }) => {
         </div>
 
         {/* Demo Instructions */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h4 className="font-medium text-yellow-800 mb-2">Demo Instructions</h4>
-          <ul className="text-sm text-yellow-700 space-y-1">
+        <div className="bg-[#D9EAD3] border border-[#A8C3A0] rounded-lg p-4">
+          <h4 className="font-medium text-[#2D2D2D] mb-2">Demo Instructions</h4>
+          <ul className="text-sm text-[#2D2D2D]/80 space-y-1">
             <li>• Open multiple browser windows to simulate different users</li>
             <li>• Create a room in one window, share the invite code</li>
             <li>• Join the same room from other windows</li>
